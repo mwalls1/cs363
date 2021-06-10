@@ -52,7 +52,8 @@ CREATE TABLE major(
     level varchar(5),
     PRIMARY KEY(snum, name, level),
     FOREIGN KEY(snum) REFERENCES students(snum),
-    FOREIGN KEY(name) REFERENCES degrees(name)
+    FOREIGN KEY(name) REFERENCES degrees(name),
+    FOREIGN KEY(name,level) REFERENCES degrees(name,level)
 );
 CREATE TABLE minor(
 	snum integer,
@@ -60,7 +61,7 @@ CREATE TABLE minor(
     level varchar(5),
     PRIMARY KEY(snum, name, level),
     FOREIGN KEY(snum) REFERENCES students(snum),
-    FOREIGN KEY(name) REFERENCES degrees(name)
+    FOREIGN KEY(name,level) REFERENCES degrees(name,level)
 );
     
     

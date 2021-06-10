@@ -1,0 +1,1 @@
+DROP TABLES mentioned, tagged, urlused, tweets, TwitterUser;

@@ -47,7 +47,7 @@ SELECT s.name, s.snum, s.ssn/*Using LIKE to check for patterns*/
     
 SELECT s.name, s.snum, s.ssn/*Same as previous*/
 	FROM students s
-    WHERE s.name NOT LIKE '%N%' or s.name NOT LIKE '%n%';
+    WHERE s.name NOT LIKE '%N%' OR s.name NOT LIKE '%n%';
     
 SELECT c.number, c.name, COUNT(r.snum)/*Create a table that is all courses combined with matching records from register table, count student num per cours*/
 	FROM courses c
@@ -64,7 +64,7 @@ SELECT c.number, c.name /*This is the same as a previous quesry, but printing co
     JOIN departments d on c.department_code = d.code
     WHERE d.name = "Computer Science";
     
-SELECT c.number, c.name /*Using OR to find classes in both departments*/
+SELECT c.number, c.name
 	FROM courses c
     JOIN departments d on c.department_code = d.code
     WHERE d.name = "Computer Science" or d.name = "Landscape Architect";

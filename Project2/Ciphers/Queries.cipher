@@ -1,0 +1,70 @@
+//Query 1
+MATCH (u:User)-[:POSTED]->(t:Tweet)
+WHERE t.month = "1" AND t.year = "2016"
+RETURN t.retweet_count AS num_retweets, t.text AS tweet_text, u.screen_name, u.category, u.sub_category AS subcategory
+ORDER BY toInteger(t.retweet_count) DESC LIMIT 5;
+
+//Query 2
+MATCH (h:Hashtag)-[:TAGGED]->(t:Tweet)<-[:POSTED]-(u:User)-[:FROM]->(s:State)
+WHERE t.year = "2016" AND h.name <> "" AND s.name <> "na"
+RETURN COUNT(DISTINCT s.name) AS statenum, COLLECT(DISTINCT s.name) AS states, toUpper(h.name) AS hashtag_text
+ORDER BY COUNT (DISTINCT s.name)
+DESC LIMIT 5;
+
+//Query 3
+MATCH (h:Hashtag)-[:TAGGED]->(t:Tweet)<-[:POSTED]-(u:User)-[:FROM]->(s:State)
+WITH h, t, u, s, u.followers AS followers
+ORDER BY toInteger(followers) DESC 
+WHERE h.name = "HappyNewYear" OR h.name = "NewYear" OR h.name = "NewYears" OR h.name = "NewYearsDay"
+RETURN DISTINCT u.screen_name , s.name
+LIMIT 12;
+
+//Query 4
+MATCH (u:User)
+WHERE u.sub_category = "GOP"
+RETURN u.screen_name, u.sub_category AS subcategory, u.followers
+ORDER BY toInteger(u.followers) DESC
+LIMIT 5;
+
+//Query 4
+MATCH (u:User)
+WHERE u.sub_category = "democrat"
+RETURN u.screen_name, toUpper(u.sub_category) AS subcategory, u.followers
+ORDER BY toInteger(u.followers) DESC
+LIMIT 5;
+
+//Query 5
+MATCH (h:Hashtag)-[:TAGGED]->(t:Tweet)<-[:POSTED]-(u:User)-[:FROM]->(s:State)
+WHERE t.month = "1" AND t.year = "2016" AND (s.name = "Ohio" OR s.name = "Alaska" OR s.name = "Alabama") AND h.name <> ""
+RETURN toUpper(h.name), collect(DISTINCT s.name)
+ORDER BY toUpper(h.name);
+
+//Query 6
+MATCH (h:Hashtag)-[:TAGGED]->(t:Tweet)<-[:POSTED]-(u:User)-[:FROM]->(s:State)
+WHERE h.name = "Ohio" AND (u.sub_category = "GOP" OR u.sub_category = "democrat") AND s.name = "Ohio" AND t.month = "1" AND t.year = "2016"
+RETURN t.text, h.name, u.screen_name, u.sub_category
+LIMIT 5;
+
+//Qurey 7
+MATCH (l:Url)<-[:URL_USED]-(t:Tweet)<-[:POSTED]-(u:User)-[:FROM]->(s:State)
+WHERE toUpper(u.sub_category) = "GOP" AND t.month = "1" AND t.year = "2016" AND l.url <> ""
+RETURN u.screen_name, s.name, collect(l.url)
+ORDER BY toUpper(u.screen_name);
+
+//Query 8
+MATCH(u:User)-[:POSTED]->(t:Tweet)-[r:MENTIONED]->(m:User)
+WITH u,t,r,m
+WHERE u.sub_category="GOP" and m.screen_name<>''
+AND t.year="2016" AND t.month='1' WITH COUNT(DISTINCT(r)) AS mentions, m.screen_name AS mentionedUser, m.location AS stateOfMentionedUser, collect(DISTINCT(u.screen_name)) AS listMentioningUsers 
+RETURN mentionedUser, stateOfMentionedUser, listMentioningUsers
+ORDER BY mentions DESC
+LIMIT 5;
+
+//Query 9
+MATCH (h:Hashtag)-[:TAGGED]->(t:Tweet)<-[:POSTED]-(u:User)
+WHERE (t.month = "1" OR t.month = "2" OR t.month = "3") AND t.year = "2016" AND u.sub_category = "GOP" AND h.name <> ""
+RETURN toUpper(h.name), count(h) 
+ORDER BY COUNT(h) DESC
+LIMIT 5;
+
+
